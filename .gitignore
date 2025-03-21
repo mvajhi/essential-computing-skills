@@ -1,0 +1,24 @@
+# Vagrant
+.vagrant/
+
+# Ansible
+*.retry
+
+# Docker
+*.log
+docker-compose.override.yml
+docker-compose.override.yaml
+
+# General
+*.swp
+*.swo
+*.bak
+*.tmp
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+node_modules/
+dist/
+build/
+.env

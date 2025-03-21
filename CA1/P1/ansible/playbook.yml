@@ -1,0 +1,12 @@
+- name: My first play
+  hosts: all
+  tasks:
+   - name: Ping
+     ansible.builtin.ping:
+
+   - name: Download mosh
+     ansible.builtin.get_url:
+       url: https://github.com/dtinth/mosh-static/releases/latest/download/mosh-server
+       dest: ~/mosh-server
+       mode: '0770'
+       checksum: "sha256:381fb683231fb64fa1e54009feafc225ebfc06fba3e5db55b67abb313cdf1a14"
