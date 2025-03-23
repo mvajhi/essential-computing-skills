@@ -1,0 +1,36 @@
+- name: P4
+  hosts: all
+  become: yes
+  tasks:
+  - name: Set grub timeout to {{ timeout }} seconds
+    ansible.builtin.lineinfile:
+      path: /etc/default/grub
+      regexp: '^GRUB_TIMEOUT='
+      line: 'GRUB_TIMEOUT={{ timeout }}'
+    notify: Update grub
+
+  - name: Set timeout Style to visible
+    ansible.builtin.lineinfile:
+      path: /etc/default/grub
+      regexp: '^GRUB_TIMEOUT_STYLE='
+      line: 'GRUB_TIMEOUT_STYLE=menu'
+    notify: Update grub
+
+  - name: Add ubuntu desktop entry
+    ansible.builtin.blockinfile:
+      path: /etc/grub.d/40_custom
+      block: |
+        menuentry 'Ubuntu desktop' {
+            set root='hd1,gpt2'
+            linux   /boot/vmlinuz-6.11.0-17-generic root=UUID={{ UUID }} ro quiet splash $vt_handoff
+            initrd  /boot/initrd.img-6.11.0-17-generic
+        }
+    notify: Update grub
+
+  handlers:
+  - name: Update grub
+    ansible.builtin.command: update-grub
+
+  vars:
+    timeout: 5
+    UUID: 0fb08309-1089-4ef0-94a0-743f8e0921d0
