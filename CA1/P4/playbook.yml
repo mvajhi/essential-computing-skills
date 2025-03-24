@@ -73,6 +73,15 @@
       mode: '0755'
     notify: Convert font to pf2
     
+  - name: Set grub color
+    ansible.builtin.blockinfile:
+      path: /etc/grub.d/40_custom
+      block: |
+        set color_normal=magenta/black
+        set color_highlight=blue/magenta
+      marker: "# {mark} color ANSIBLE MANAGED BLOCK"
+    notify: Update grub
+
   handlers:
   - name: Convert font to pf2
     ansible.builtin.command: "grub-mkfont {{ font_path }} -o {{ grub_dir }}font.pf2 -s 12"
