@@ -6,6 +6,10 @@
     ansible.builtin.shell: "systemd-analyze >> ~/boot_time"
     become: no
 
+  - name: Store boot time blame
+    ansible.builtin.shell: "systemd-analyze blame >> ~/boot_time"
+    become: no
+
   - name: Set grub timeout to {{ timeout }} seconds
     ansible.builtin.lineinfile:
       path: /etc/default/grub
@@ -76,7 +80,7 @@
       dest: "{{ font_path }}"
       mode: '0755'
     notify: Convert font to pf2
-    
+
   - name: Set grub color
     ansible.builtin.blockinfile:
       path: /etc/grub.d/40_custom
