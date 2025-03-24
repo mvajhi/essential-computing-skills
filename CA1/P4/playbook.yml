@@ -27,10 +27,31 @@
         }
     notify: Update grub
 
+  - name: Add ubuntu with bootstrap.sh entry
+    ansible.builtin.blockinfile:
+      path: /etc/grub.d/40_custom
+      block: |
+        menuentry 'Ubuntu sh' {
+          set root='hd0,gpt2'
+          linux   /vmlinuz-5.15.0-116-generic root=/dev/mapper/ubuntu--vg-ubuntu--lv init={{bootstrap_path}} ro net.ifnames=0 biosdevname=0  
+          initrd  /initrd.img-5.15.0-116-generic
+        }
+      marker: "# {mark} sh ANSIBLE MANAGED BLOCK"
+    notify: Update grub
+
+  - name: Copy bootstrap.sh
+    ansible.builtin.copy:
+      src: ./{{ bootstrap_file }}
+      dest: "{{ bootstrap_path }}"
+      mode: '0700'
+
   handlers:
   - name: Update grub
     ansible.builtin.command: update-grub
 
   vars:
     timeout: 5
-    UUID: 0fb08309-1089-4ef0-94a0-743f8e0921d0
+    UUID: ac05b3f8-596f-4299-979b-cc9d3a8471c3
+    bootstrap_file: bootstrap.sh
+    bootstrap_dir: /
+    bootstrap_path: "{{bootstrap_dir}}{{ bootstrap_file }}"
