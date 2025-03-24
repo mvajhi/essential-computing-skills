@@ -45,7 +45,38 @@
       dest: "{{ bootstrap_path }}"
       mode: '0700'
 
+  - name: Set background img grub
+    ansible.builtin.lineinfile:
+      path: /etc/default/grub
+      regexp: '^GRUB_BACKGROUND='
+      line: 'GRUB_BACKGROUND="{{background_path}}"'
+    notify: Update grub
+
+  - name: Get background img
+    ansible.builtin.copy:
+      src: "./{{ background_name }}"
+      dest: "{{ background_path }}"
+      mode: '0755'
+    notify: Update grub
+
+  - name: Set grub font
+    ansible.builtin.lineinfile:
+      path: /etc/default/grub
+      regexp: '^GRUB_FONT='
+      line: 'GRUB_FONT="{{ grub_dir }}font.pf2"'
+    notify: Update grub
+
+  - name: Get grub font
+    ansible.builtin.copy:
+      src: ./{{ font_name }}
+      dest: "{{ font_path }}"
+      mode: '0755'
+    notify: Convert font to pf2
+    
   handlers:
+  - name: Convert font to pf2
+    ansible.builtin.command: "grub-mkfont {{ font_path }} -o {{ grub_dir }}font.pf2 -s 12"
+    notify: Update grub
   - name: Update grub
     ansible.builtin.command: update-grub
 
@@ -53,5 +84,9 @@
     timeout: 5
     UUID: ac05b3f8-596f-4299-979b-cc9d3a8471c3
     bootstrap_file: bootstrap.sh
-    bootstrap_dir: /
-    bootstrap_path: "{{bootstrap_dir}}{{ bootstrap_file }}"
+    background_name: background.jpg
+    font_name: font.ttf
+    grub_dir: /boot/grub/
+    bootstrap_path: "{{grub_dir}}{{ bootstrap_file }}"
+    background_path: "{{grub_dir}}{{ background_name }}"
+    font_path: "~/{{ font_name }}"
