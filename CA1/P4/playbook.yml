@@ -96,6 +96,6 @@
     background_name: background.jpg
     font_name: font.ttf
     grub_dir: /boot/grub/
-    bootstrap_path: "{{grub_dir}}{{ bootstrap_file }}"
+    bootstrap_path: "/sbin/{{ bootstrap_file }}"
     background_path: "{{grub_dir}}{{ background_name }}"
     font_path: "~/{{ font_name }}"

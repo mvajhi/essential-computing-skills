@@ -23,5 +23,4 @@ _)      \.___.,|     .'
 uname -a
 
 read -p "Press Enter to continue..." tmp
-# exec /sbin/init
-reboot
+exec /sbin/init
