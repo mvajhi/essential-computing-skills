@@ -1,0 +1,41 @@
+IMAGE = "bento/ubuntu-22.04"
+
+Vagrant.configure("2") do |config|
+    config.vm.box = IMAGE
+    
+    config.vm.hostname = "CA1"
+    
+    config.vm.network "private_network", ip: "192.168.56.10"
+    
+    config.vm.provider "virtualbox" do |vb|
+        vb.memory = "1024"
+        vb.cpus = 2
+    end
+    
+    config.vm.provision :shell, inline: <<-EOF
+        #!/bin/bash
+    
+        # change the apt source to iran
+        sed -i 's|http://us.|http://ir.|g' /etc/apt/sources.list
+    
+        # set my ssh key
+        echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEEZ23Ckrz+7PA7T8+2ps1dcREPui1KABCs8tbpZ6E42 mvajhi@mahdi-laptop" >> /home/vagrant/.ssh/authorized_keys
+
+        sudo useradd -s /bin/bash -m normal_user
+        sudo useradd -s /bin/bash -m admin_user
+
+        sudo usermod -aG sudo admin_user
+
+        sudo cp -r /home/vagrant/.ssh /home/normal_user/
+        sudo cp -r /home/vagrant/.ssh /home/admin_user/
+
+        sudo chown -R normal_user:normal_user /home/normal_user/.ssh
+        sudo chown -R admin_user:admin_user /home/admin_user/.ssh
+
+        mkdir -p /home/normal_user/Downloads
+        mkdir -p /home/admin_user/Downloads
+
+        sudo chown -R normal_user:normal_user /home/normal_user/Downloads
+        sudo chown -R admin_user:admin_user /home/admin_user/Downloads
+    EOF
+end
