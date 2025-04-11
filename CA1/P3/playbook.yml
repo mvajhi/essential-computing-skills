@@ -1,0 +1,80 @@
+- name: P1
+  hosts: all
+  become: true
+  tasks:
+  - name: Ping
+    ansible.builtin.ping:
+
+  - name: apt install pip
+    ansible.builtin.apt:
+      name: python3-pip
+      update_cache: yes
+      cache_valid_time: 60000
+
+  - name: pip install psutil
+    pip:
+      name: psutil
+
+  - name: move resource_manager.py
+    ansible.builtin.copy:
+      src: ./resource_manager/resource_manager.py
+      dest: /usr/local/sbin/resource_manager.py
+      owner: root
+      group: root
+      mode: '0755'
+
+  - name: move resource_manager.conf
+    block:
+      - name: create directory for resource_manager
+        ansible.builtin.file:
+          path: /etc/resource_manager
+          state: directory
+          mode: '0755'
+      
+      - name: copy config.json to /etc/resource_manager
+        ansible.builtin.copy:
+          src: ./resource_manager/config.json
+          dest: /etc/resource_manager/config.json
+          owner: root
+          group: root
+          mode: '0644'
+
+  - name: move resource_manager.service
+    ansible.builtin.copy:
+      src: ./resource_manager/resource_manager.service
+      dest: /etc/systemd/system/resource_manager.service
+      owner: root
+      group: root
+      mode: '0644'
+
+  - name: enable resource_manager
+    ansible.builtin.systemd:
+      name: resource_manager
+      enabled: true
+      daemon_reload: true
+      state: started
+
+  - name: Add Stop process alias
+    become: false
+    ansible.builtin.lineinfile:
+      path: ~/.bashrc
+      line: 'alias list_stop_ps="ps axo pid,stat,comm | grep T"'
+
+  - name: move c files
+    become: false
+    ansible.builtin.copy:
+      src: ./test_code/{{ item }}
+      dest: ~/{{ item }}
+      mode: '0644'
+    with_items:
+      - cpu.c
+      - mem.c
+      
+  - name: compile c files
+    become: false
+    ansible.builtin.command:
+      cmd: gcc {{ item }}.c -pthread -lm -o {{ item }}
+      chdir: ~/
+    with_items:
+      - cpu
+      - mem

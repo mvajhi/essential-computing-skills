@@ -1,0 +1,9 @@
+{
+    "COOLDOWN": 30,
+    "THRESHOLD_CPU": 80,
+    "THRESHOLD_MEMORY": 80,
+    "PATH": "/var/log/resource_manager",
+    "SUSPEND_LOG_PATH": "/var/log/resource_manager/suspend_log.csv",  
+    "USAGE_LOG_PATH": "/var/log/resource_manager/system_monitor.csv",        
+    "RUN_INTERVAL": 1
+}
