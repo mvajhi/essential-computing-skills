@@ -219,7 +219,7 @@ if __name__ == "__main__":
     import datetime
 
     # Server details
-    HOST = "192.168.56.10"  # Replace with your server's IP or hostname
+    HOST = "192.168.56.12"  # Replace with your server's IP or hostname
     ADMIN_USER = "admin_user"  # Replace with your admin username
     NORMAL_USER = "normal_user"  # Replace with your normal username
 

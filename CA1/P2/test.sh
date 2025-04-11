@@ -1,9 +1,11 @@
 #! /usr/bin/bash
 
+WAIT=0
 # if there is no .vagrant, first run vagrant up
 if [ ! -d ".vagrant" ]; then
   echo "No .vagrant directory found. Please run 'vagrant up' first."
   vagrant up
+  WAIT=1
 fi
 
 PY="./ssh_client.py"
@@ -91,7 +93,11 @@ echo -e "$USERNAME\n$COMMAND" | python3 $PY
 # Test 7-3
 echo "@@@@@@@@@@Test 7-3@@@@@@@@@@@@"
 echo "Test 7-3: admin check backup result"
-COMMAND="sleep 30 && ls -ltrh /var/backup"
+if [ $WAIT -eq 1 ]; then
+  echo "Waiting for 30 seconds to let the backup run..."
+  sleep 30
+fi
+COMMAND="ls -ltrh /var/backup"
 USERNAME="admin"
 echo "user: $USERNAME, command: $COMMAND"
 echo -e "$USERNAME\n$COMMAND" | python3 $PY
