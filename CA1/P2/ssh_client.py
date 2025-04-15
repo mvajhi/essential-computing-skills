@@ -16,13 +16,23 @@ def get_system_health(client, role):
         print(f"Permission denied: Role '{role}' cannot access system health information.")
         return
 
-    cpu_percent = psutil.cpu_percent()
-    memory_percent = psutil.virtual_memory().percent
-    disk_percent = psutil.disk_usage('/').percent
+    try:
+        stdin, stdout, stderr = client.exec_command("cat /proc/loadavg | awk '{print $1}'")
+        cpu_percent = stdout.read().decode().strip()
+        
+        stdin, stdout, stderr = client.exec_command("free | grep Mem | awk '{print $3/$2 * 100.0}'")
+        memory_percent = stdout.read().decode().strip()
+        
+        stdin, stdout, stderr = client.exec_command("df -h / | tail -1 | awk '{print $5}' | tr -d '%'")
+        disk_percent = stdout.read().decode().strip()
 
-    print(f"CPU Usage: {cpu_percent}%")
-    print(f"Memory Usage: {memory_percent}%")
-    print(f"Disk Usage: {disk_percent}%")
+        print(f"Remote Server Health Status:")
+        print(f"CPU Usage: {cpu_percent}%")
+        print(f"Memory Usage: {memory_percent}%")
+        print(f"Disk Usage: {disk_percent}%")
+        
+    except Exception as e:
+        print(f"Error getting system health: {e}")
 
 def upload_file(client, role, local_path, remote_path, username):
     """
