@@ -1,0 +1,3 @@
+[submodule "CA2/P2/git_repo"]
+	path = CA2/P2/git_repo
+	url = git@github.com:mvajhi/ECS_Git_Practice.git
