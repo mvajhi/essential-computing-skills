@@ -1,0 +1,48 @@
+mvajhi@mahdi-laptop P2/hg (main) » hg init                                         
+mvajhi@mahdi-laptop P2/hg (main) » echo A > A    
+mvajhi@mahdi-laptop P2/hg (main) » hg add * && hg commit -m "A"
+mvajhi@mahdi-laptop P2/hg (main) » echo B > B                  
+mvajhi@mahdi-laptop P2/hg (main) » hg add * && hg commit -m "B"
+A already tracked!
+mvajhi@mahdi-laptop P2/hg (main) » hg branch Fea1              
+marked working directory as branch Fea1
+(branches are permanent and global, did you want a bookmark?)
+mvajhi@mahdi-laptop P2/hg (main) » echo F1A > F1A              
+mvajhi@mahdi-laptop P2/hg (main) » hg add F1A && hg commit -m "F1A"
+mvajhi@mahdi-laptop P2/hg (main) » echo F1B > F1B                  
+mvajhi@mahdi-laptop P2/hg (main) » hg add F1B && hg commit -m "F1B"
+mvajhi@mahdi-laptop P2/hg (main) » hg update default               
+0 files updated, 0 files merged, 2 files removed, 0 files unresolved
+mvajhi@mahdi-laptop P2/hg (main) » echo C > C                      
+mvajhi@mahdi-laptop P2/hg (main) » hg add C && hg commit -m "C"  
+mvajhi@mahdi-laptop P2/hg (main) » hg branch Fea2              
+marked working directory as branch Fea2
+mvajhi@mahdi-laptop P2/hg (main) » hg help branch
+mvajhi@mahdi-laptop P2/hg (main) » hg update default           
+0 files updated, 0 files merged, 0 files removed, 0 files unresolved
+mvajhi@mahdi-laptop P2/hg (main) » hg log -G -T '{short} {tags}{branches} {desc}\n'
+mvajhi@mahdi-laptop P2/hg (main) » hg branch -f Fea2                               
+marked working directory as branch Fea2
+mvajhi@mahdi-laptop P2/hg (main) » echo F2A > F2A                                  
+mvajhi@mahdi-laptop P2/hg (main) » hg add F2A && hg commit -m "F2A"               
+mvajhi@mahdi-laptop P2/hg (main) » echo F2B > F2B                  
+mvajhi@mahdi-laptop P2/hg (main) » hg add F2B && hg commit -m "F2B"
+mvajhi@mahdi-laptop P2/hg (main) » hg update default                               
+0 files updated, 0 files merged, 2 files removed, 0 files unresolved
+mvajhi@mahdi-laptop P2/hg (main) » hg log -G -T '{short} {tags}{branches} {desc}\n'
+mvajhi@mahdi-laptop P2/hg (main) » hg help merge                                   
+mvajhi@mahdi-laptop P2/hg (main) » hg update default                               
+0 files updated, 0 files merged, 0 files removed, 0 files unresolved
+mvajhi@mahdi-laptop P2/hg (main) » ls
+A  B  C
+mvajhi@mahdi-laptop P2/hg (main) » hg merge Fea1    
+2 files updated, 0 files merged, 0 files removed, 0 files unresolved
+(branch merge, don't forget to commit)
+mvajhi@mahdi-laptop P2/hg (main) » ls
+A  B  C  F1A  F1B
+mvajhi@mahdi-laptop P2/hg (main) » hg commit -m "D merge F1"                       
+mvajhi@mahdi-laptop P2/hg (main) » hg merge Fea2            
+2 files updated, 0 files merged, 0 files removed, 0 files unresolved
+(branch merge, don't forget to commit)
+mvajhi@mahdi-laptop P2/hg (main) » hg commit -m "E merge F2"
+mvajhi@mahdi-laptop P2/hg (main) » hg log -G -T '{short} {tags}{branches} {desc}\n'
