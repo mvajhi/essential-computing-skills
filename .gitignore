@@ -24,3 +24,11 @@ build/
 .env
 
 *.out
+*.ko
+*.mod.*
+*.o Module.*
+modules.*
+*.o
+*.cmd
+*.symvers
+*.mod
