@@ -1,0 +1,87 @@
+
+services:
+  #  Go ()
+  shahin_go:
+    build: ./shahin-go
+    container_name: shahin_go
+    networks:
+      - front
+
+  # 2048
+  shahin_game:
+    build: ./2048
+    container_name: shahin_game
+    networks:
+      - front
+
+  # (vote)
+  vote:
+    build: ./voting-app/vote
+    container_name: vote
+    networks:
+      - front
+      - back
+    depends_on:
+      - redis
+
+  result:
+    build: ./voting-app/result
+    container_name: result
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+    networks:
+      - front
+      - back
+    depends_on:
+      - db
+
+  worker:
+    build: ./voting-app/worker
+    container_name: worker
+    networks:
+      - back
+    depends_on:
+      - redis
+      - db
+
+
+  #  PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+    networks:
+      - back
+    
+
+  #  Redis Queue
+  redis:
+    image: redis:alpine
+    container_name: redis
+    networks:
+      - back
+
+  # Reverse Proxy of NGINX
+  nginx:
+    image: nginx:alpine
+    container_name: nginx_proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/auth/.htpasswd:/etc/nginx/.htpasswd
+    depends_on:
+      - shahin_go
+      - shahin_game
+      - vote
+      - result
+    networks:
+      - front
+
+networks:
+  front:
+  back:
